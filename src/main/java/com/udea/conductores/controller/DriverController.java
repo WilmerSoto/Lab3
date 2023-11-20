@@ -1,9 +1,12 @@
 package com.udea.conductores.controller;
 
+import com.udea.conductores.exceptions.CedulaNotFoundException;
 import com.udea.conductores.exceptions.InvalidRating;
 import com.udea.conductores.exceptions.ModelNotFoundException;
 import com.udea.conductores.exceptions.ModelNotFoundException;
 import com.udea.conductores.model.Driver;
+import com.udea.conductores.model.User;
+import com.udea.conductores.model.Vehicle;
 import com.udea.conductores.service.DriverService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,8 +49,8 @@ public class DriverController {
     }
 
     @ApiOperation(value = "Get Driver by ID")
-    @GetMapping("/list/{id}")
-    public Driver listDriverById(@ApiParam(value = "Driver ID from driver object will retrive", required = true)
+    @GetMapping("/listById/{id}")
+    public Driver listDriverById(@ApiParam(value = "ID of the Driver to be retrieved from DB", required = true)
                                  @PathVariable("id") int id) {
         Optional<Driver> driver = driverService.listId(id);
         if (driver.isPresent()) {
@@ -56,6 +59,29 @@ public class DriverController {
         throw new ModelNotFoundException("ID de driver invalido");
     }
 
+    @ApiOperation(value = "Get Driver by Cedula")
+    @GetMapping("/listByCedula/{cedula}")
+    public Driver listDriverByCedula(@ApiParam(value = "Cedula of the Driver to be retrieved from DB", required = true)
+                                         @PathVariable("cedula") String cedula) {
+        Optional<Driver> driver = driverService.listCedula(cedula);
+        if (driver.isPresent()) {
+            return driver.get();
+        }
+        throw new CedulaNotFoundException("Invalid Driver Cedula");
+    }
+
+//    @ApiOperation(value = "Get Driver Vehicle")
+//    @GetMapping("/listVehicle/{cedula}")
+//    public Vehicle listDriverVehicle(@ApiParam(value = "Cedula of the Driver Vehicle to be retrieved from DB", required = true)
+//                                     @PathVariable("cedula") String cedula) {
+//        Optional<Driver> driver = driverService.listCedula(cedula);
+//        if (driver.isPresent()) {
+//            Driver driverVehicle = driver.get();
+//            return driverVehicle.getIdVehicle();
+//        }
+//        throw new CedulaNotFoundException("Invalid Driver Cedula");
+//    }
+
     @ApiOperation(value = "Get Top Driver")
     @GetMapping("/topDrivers")
     public ResponseEntity<List<Driver>> viewBestDrivers() {
@@ -63,13 +89,22 @@ public class DriverController {
         return new ResponseEntity<List<Driver>>(list, HttpStatus.ACCEPTED);
     }
 
-    @PutMapping
+    @ApiOperation(value = "Update Driver")
+    @PutMapping("/update")
     public Driver updateService(@RequestBody Driver driver) {
         return driverService.update(driver);
     }
 
-    @DeleteMapping("/{id}")
+
+    @ApiOperation(value = "Delete Driver by ID")
+    @DeleteMapping("deleteById/{id}")
     public String deleteDriver(@PathVariable long id) {
         return driverService.delete(id);
+    }
+
+    @ApiOperation(value = "Delete Driver by Cedula")
+    @DeleteMapping("deleteByCedula/{cedula}")
+    public String deleteDriverCedula(@PathVariable String cedula) {
+        return driverService.deleteCedula(cedula);
     }
 }
