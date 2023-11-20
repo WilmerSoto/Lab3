@@ -3,6 +3,7 @@ package com.udea.conductores.service;
 import com.udea.conductores.dao.IDriverDAO;
 import com.udea.conductores.exceptions.DriverNotFoundException;
 import com.udea.conductores.model.Driver;
+import com.udea.conductores.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +15,17 @@ public class DriverService {
     @Autowired
     private IDriverDAO dao;
 
-    public Driver save(Driver t) {
-        return dao.save(t);
+    public void save(Driver t) {
+        dao.save(t);
     }
 
     public String delete(long id) {
         dao.deleteById(id);
+        return "Driver Removed";
+    }
+
+    public String deleteCedula(String cedula) {
+        dao.deleteByCedula(cedula);
         return "Driver Removed";
     }
 
@@ -31,15 +37,19 @@ public class DriverService {
         return dao.findById(id);
     }
 
-    public Driver update(Driver t) {
-        Driver existingDriver = dao.findById(t.getIdDriver()).orElse(null);
-        existingDriver.setFirstName(t.getFirstName());
-        existingDriver.setLastName(t.getLastName());
-        existingDriver.setCedula(t.getCedula());
-        existingDriver.setEmail(t.getEmail());
-        existingDriver.setRating(t.getRating());
-        existingDriver.setLicenciaCon(t.getLicenciaCon());
-        existingDriver.setAvailable(t.getAvailable());
+    public Optional<Driver> listCedula(String cedula) {
+        return dao.findByCedula(cedula);
+    }
+
+    public Driver update(Driver d) {
+        Driver existingDriver = dao.findById(d.getIdDriver()).orElse(null);
+        existingDriver.setFirstName(d.getFirstName());
+        existingDriver.setLastName(d.getLastName());
+        existingDriver.setCedula(d.getCedula());
+        existingDriver.setEmail(d.getEmail());
+        existingDriver.setRating(d.getRating());
+        existingDriver.setLicenciaCon(d.getLicenciaCon());
+        existingDriver.setAvailable(d.getAvailable());
 
         return dao.save(existingDriver);
     }
@@ -51,5 +61,6 @@ public class DriverService {
         else throw new DriverNotFoundException("No driver found with rating >=4");
 
     }
+
 
 }
