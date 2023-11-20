@@ -7,6 +7,7 @@ import com.udea.conductores.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,11 +20,13 @@ public class DriverService {
         dao.save(t);
     }
 
+    @Transactional
     public String delete(long id) {
         dao.deleteById(id);
         return "Driver Removed";
     }
 
+    @Transactional
     public String deleteCedula(String cedula) {
         dao.deleteByCedula(cedula);
         return "Driver Removed";

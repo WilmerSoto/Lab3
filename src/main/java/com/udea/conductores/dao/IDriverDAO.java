@@ -11,7 +11,6 @@ import java.util.Optional;
 public interface IDriverDAO extends CrudRepository<Driver, Long> {
     @Query("from Driver d where d.rating>=4 AND d.available=true")
     public List<Driver> viewBestDriver();
-
     Optional<Driver> findByCedula(String cedula);
     void deleteByCedula(String cedula);
 
