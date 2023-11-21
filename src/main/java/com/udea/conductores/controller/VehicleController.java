@@ -66,7 +66,7 @@ public class VehicleController {
         throw new CedulaNotFoundException("No vehicle found");
     }
 
-    @ApiOperation(value = "Update Driver")
+    @ApiOperation(value = "Update Vehicle")
     @PutMapping("/update")
     public Vehicle updateService(@RequestBody Vehicle vehicle) {
         return vehicleService.update(vehicle);

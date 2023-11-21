@@ -19,16 +19,16 @@ public class UsuarioController {
     @Autowired
     private UserService userService;
 
-    @ApiOperation(value = "Add Driver")
+    @ApiOperation(value = "Add User")
     @PostMapping("/save")
     public long save(
-            @ApiParam(value = "Driver Object Store in DB table", required = true)
+            @ApiParam(value = "User Object Store in DB table", required = true)
             @RequestBody User user) {
         userService.save(user);
         return user.getIdUser();
     }
 
-    @ApiOperation(value = "View a list of available drivers", response = List.class)
+    @ApiOperation(value = "View a list of all Users", response = List.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Successfully retrieved list"),
             @ApiResponse(code = 401, message = "You are not authorized to viwe the resource"),
@@ -41,18 +41,18 @@ public class UsuarioController {
     }
 
     @ApiOperation(value = "Get User by ID")
-    @GetMapping("/list/{id}")
+    @GetMapping("/listById/{id}")
     public User listUserById(@ApiParam(value = "ID of the User to be retrieved from DB", required = true)
                                  @PathVariable("id") int id) {
         Optional<User> user = userService.listId(id);
         if (user.isPresent()) {
             return user.get();
         }
-        throw new ModelNotFoundException("Invalid driver ID");
+        throw new ModelNotFoundException("Invalid User ID");
     }
 
     @ApiOperation(value = "Get User by Cedula")
-    @GetMapping("/list/{cedula}")
+    @GetMapping("/listByCedula/{cedula}")
     public User listUserByCedula(@ApiParam(value = "Cedula of the User to be retrieved from DB", required = true)
                              @PathVariable("cedula") String cedula) {
         Optional<User> user = userService.listCedula(cedula);
@@ -63,19 +63,19 @@ public class UsuarioController {
     }
 
     @ApiOperation(value = "Update User")
-    @PutMapping
+    @PutMapping(value = "/update")
     public User updateService(@RequestBody User user) {
         return userService.update(user);
     }
 
     @ApiOperation(value = "Delete User by ID")
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("/deleteById/{id}")
     public String deleteUser(@PathVariable long id) {
         return userService.delete(id);
     }
 
     @ApiOperation(value = "Delete User by Cedula")
-    @DeleteMapping("delete/{cedula}")
+    @DeleteMapping("/deleteByCedula/{cedula}")
     public String deleteUserCedula(@PathVariable String cedula) {
         return userService.deleteCedula(cedula);
     }
